@@ -25,9 +25,10 @@ unsigned long prevSerialTime = 0;
 float         dt = 0;
 
 // Velocity Control Gains, Motor 1
-const float Kpv1 = 1000.0;  // around 1000 is good
-const float Kdv1 = 0.0;
-const float Kiv1 = 0.0;
+bool velocityControl = true;
+const float Kpv1 = 2500.0;  // around 1000 is good for a start
+const float Kdv1 = 0.00;     // Keep this value less than 10
+const float Kiv1 = 200.0;   // around 20 is good for a start
 float error1 = 0.0;
 float error1Prev = 0.0;
 float integratedError1 = 0;
@@ -44,6 +45,22 @@ float desiredMV1 = 0; //  meters/second
 // Sine Wave
 float sinFreq = 0.5; // (Hz)
 
+//Motor Positions
+float wheelPos1 = 0.0; //meters
+float desiredWheelPos1 = 0.0; //meters
+
+//Motor Position Errors
+float wheelPosError1 = 0.0;
+float wheelPosError1Prev = 0.0;
+float integratedWheelPosError1 = 0.0;
+int wheelProportionalCommand1 = 0;
+int wheelDerivativeCommand1 = 0;
+int wheelIntegralCommand1 = 0;
+
+//Position Control Gains, Motor1
+const float Kpp1 = 2000;  //around 500 is a good start.
+const float Kdp1 = 0.0;//1200.0;  // try 0 and 1000.
+const float Kip1 = 0.0;//1400.0;  // around 5 is a good start. do not exceed 400.
 ///////////////////////Helper Functions///////////////////////  
   
 void stopIfFault()
@@ -60,6 +77,7 @@ void stopIfFault()
 void DoSerialSend()
 {
     if(micros() - prevSerialTime >= SERIAL_PERIOD_MICROS){
+      if(velocityControl){
         currentSerialTime = micros();
 
         Serial.print("#,");
@@ -75,6 +93,24 @@ void DoSerialSend()
         prevSerialTime = currentSerialTime;
 
         currentSerialTime = micros();
+      }
+      else{
+        currentSerialTime = micros();
+
+        Serial.print("#,");
+        Serial.print(millis());
+        Serial.print(',');
+        Serial.print(wheelPos1);
+        Serial.print(',');
+        Serial.print(desiredWheelPos1);
+        Serial.print(',');
+        Serial.print(m1Command);
+        Serial.println(",#");
+
+        prevSerialTime = currentSerialTime;
+
+        currentSerialTime = micros();
+      }
     }
 }
 

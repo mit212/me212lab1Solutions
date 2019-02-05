@@ -46,6 +46,7 @@ extern unsigned long prevSerialTime;     // last time serial messages were dispa
 extern float         dt;                 // time between control loops
 
 //Velocity Control Gains, Motor 1
+extern bool velocityControl;    //Boolean to determine first part of the lab
 extern const float Kpv1;        //Proportional gain, velocity, motor 1
 extern const float Kdv1;        //Derivative gain
 extern const float Kiv1;        //Integral gain
@@ -64,6 +65,23 @@ extern int   currentCommand1;
 extern float mV1;          // Estimated motor 1 velocity. (meters/second)
 extern float desiredMV1;   // (meters/second)
 
+//Motor Positions
+extern float wheelPos1; //meters
+extern float desiredWheelPos1; //meters
+
+//Motor Position Errors
+extern float wheelPosError1;
+extern float wheelPosError1Prev;
+extern float integratedWheelPosError1;
+extern int wheelProportionalCommand1;
+extern int wheelDerivativeCommand1;
+extern int wheelIntegralCommand1;
+
+//Position Control Gains, Motor1
+extern const float Kpp1;  //Proportional gain, position, motor 1
+extern const float Kdp1;  //Derivative gain
+extern const float Kip1;  //Integral Gain
+
 //Sine Wave
 extern float sinFreq;  // (Hz)
 
@@ -71,8 +89,8 @@ extern float sinFreq;  // (Hz)
 extern DualMC33926MotorShield md;
 
 //Staff constants
-const int   FREQ = 2000;
-const float PERIOD = 0.0005;
+const int   FREQ = 200;
+const float PERIOD = 0.005;
 const float PERIOD_MICROS = (PERIOD * 1000000.0);
 const int   SERIAL_FREQ = 100;  //Should be at least 10 times greater than sin wave frequency
 const float SERIAL_PERIOD = 0.01;

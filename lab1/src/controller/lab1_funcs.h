@@ -13,5 +13,7 @@ float proportional_control(void);
 float derivative_control(void);
 float integral_control(void);
 int closedLoopController(void);
+int wheelPositionController(void);
+void storeOldVals2(void);
 
 #endif //LAB1_FUNCS_H
